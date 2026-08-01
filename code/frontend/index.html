@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#fffaf5">
+    <title>MoodFrame</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="MoodFrame home">MoodFrame</a>
+      <span class="badge">A2A pixel studio</span>
+    </header>
+
+    <main class="shell">
+      <section class="intro">
+        <p class="eyebrow">HOW ARE YOU FEELING?</p>
+        <h1>Turn one mood into a tiny memory.</h1>
+        <p>Pick an emoji. Two agents write your post and frame the feeling as a downloadable pixel polaroid.</p>
+      </section>
+
+      <section class="mood-picker" aria-label="Choose a mood">
+        <button class="mood active" data-mood="joyful" data-emoji="😊"><span>😊</span>Joyful</button>
+        <button class="mood" data-mood="calm" data-emoji="😌"><span>😌</span>Calm</button>
+        <button class="mood" data-mood="loved" data-emoji="🥰"><span>🥰</span>Loved</button>
+        <button class="mood" data-mood="dreamy" data-emoji="🌙"><span>🌙</span>Dreamy</button>
+        <button class="mood" data-mood="energetic" data-emoji="⚡"><span>⚡</span>Energetic</button>
+        <button class="mood" data-mood="cozy" data-emoji="☕"><span>☕</span>Cozy</button>
+      </section>
+
+      <div class="toolbar">
+        <label>Language
+          <select id="language">
+            <option value="en">English</option>
+            <option value="zh">中文</option>
+          </select>
+        </label>
+        <button id="generate" class="primary">Create my MoodFrame</button>
+      </div>
+
+      <section id="result" class="result hidden" aria-live="polite">
+        <article class="post-card">
+          <div class="post-head">
+            <div class="avatar">MF</div>
+            <div><strong>moodframe.ai</strong><small>Generated with two A2A agents</small></div>
+          </div>
+          <div class="image-wrap">
+            <img id="artwork" alt="Generated pixel polaroid">
+          </div>
+          <div class="actions"><span>♡</span><span>◯</span><span>⌁</span></div>
+          <p id="caption" class="caption"></p>
+          <p id="hashtags" class="hashtags"></p>
+          <a id="download" class="download" download>Download PNG</a>
+        </article>
+      </section>
+      <p id="status" class="status"></p>
+    </main>
+    <script src="app.js?v=4"></script>
+  </body>
+</html>
