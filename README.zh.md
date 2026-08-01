@@ -2,6 +2,8 @@
 
 本仓库是一套具有连续故事线的一小时入门实验：你将帮助 MoodFrame 团队，把一个“选择 Emoji、分享心情、生成像素拍立得”的 Agent 小应用从开发者电脑逐步部署到 Azure。
 
+![arch](./imgs/designer.png)
+
 ## 项目架构
 
 MoodFrame 采用前后端分离架构。用户选择 Emoji 后，FastAPI 通过 A2A 协议调用两个独立部署的 Microsoft Agent Framework Agent。两个 Agent 均通过 GitHub Copilot SDK 使用 `gpt-5.6-sol`；Pillow 根据图片 Agent 返回的结构化艺术规格生成像素拍立得 PNG，并将文案和 Hashtag 一起写入图片。

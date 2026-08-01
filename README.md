@@ -2,6 +2,8 @@
 
 This repository is a story-driven, one-hour workshop about taking a small social mood-sharing agent application from a developer laptop to Azure.
 
+![arch](./imgs/designer.png)
+
 ## Project architecture
 
 MoodFrame uses a separated frontend and backend. After the user selects an emoji, FastAPI calls two independently deployed Microsoft Agent Framework agents through A2A. Both agents use GitHub Copilot SDK with `gpt-5.6-sol`; Pillow turns the image agent's structured art direction into a downloadable pixel-polaroid PNG containing the generated caption and hashtags.
