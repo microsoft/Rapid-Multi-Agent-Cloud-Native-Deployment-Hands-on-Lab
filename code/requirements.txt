@@ -1,0 +1,11 @@
+agent-framework-github-copilot==1.0.0rc4
+agent-framework-a2a==1.0.0b260721
+agent-framework-hosting-a2a==1.0.0a260730
+a2a-sdk==1.0.2
+sse-starlette>=3.0,<4
+protobuf==5.29.5
+fastapi>=0.133,<1
+httpx>=0.28,<1
+pillow>=11.3,<13
+python-dotenv>=1.2,<2
+uvicorn[standard]>=0.49,<1

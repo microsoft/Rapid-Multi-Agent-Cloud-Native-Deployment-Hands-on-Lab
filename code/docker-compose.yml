@@ -1,0 +1,48 @@
+services:
+  content-agent:
+    build:
+      context: .
+      dockerfile: agents/content_agent/Dockerfile
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN:?Set GITHUB_TOKEN before starting containers}
+      GITHUB_COPILOT_MODEL: ${GITHUB_COPILOT_MODEL:-gpt-5.6-sol}
+      AGENT_PUBLIC_URL: http://content-agent:5001/
+    ports:
+      - "5001:5001"
+
+  image-agent:
+    build:
+      context: .
+      dockerfile: agents/image_agent/Dockerfile
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN:?Set GITHUB_TOKEN before starting containers}
+      GITHUB_COPILOT_MODEL: ${GITHUB_COPILOT_MODEL:-gpt-5.6-sol}
+      AGENT_PUBLIC_URL: http://image-agent:5002/
+    ports:
+      - "5002:5002"
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      CONTENT_AGENT_URL: http://content-agent:5001
+      IMAGE_AGENT_URL: http://image-agent:5002
+    depends_on:
+      - content-agent
+      - image-agent
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    depends_on:
+      - backend
+    environment:
+      BACKEND_HOST: backend
+      BACKEND_SCHEME: http
+      BACKEND_PORT: ":8000"
+    ports:
+      - "8080:80"
