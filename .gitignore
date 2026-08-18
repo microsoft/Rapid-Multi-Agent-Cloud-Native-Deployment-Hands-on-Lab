@@ -427,3 +427,16 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+# Project-specific local and generated files
+.env
+.DS_Store
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+generated/
+.local/
+.playwright-mcp/
+.azure/
+code/infra/aks/rendered.yaml

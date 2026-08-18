@@ -1,0 +1,154 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: moodframe
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: content-agent
+  namespace: moodframe
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: content-agent }
+  template:
+    metadata:
+      labels: { app: content-agent }
+    spec:
+      containers:
+        - name: content-agent
+          image: __LOGIN_SERVER__/moodframe-content:__AGENT_TAG__
+          ports: [{ containerPort: 5001 }]
+          env:
+            - { name: GITHUB_COPILOT_MODEL, value: gpt-5.6-sol }
+            - { name: AGENT_PUBLIC_URL, value: "http://content-agent/" }
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef: { name: copilot-auth, key: github-token }
+          readinessProbe:
+            httpGet: { path: /health, port: 5001 }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 500m, memory: 1Gi }
+            limits: { cpu: "2", memory: 3Gi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: content-agent
+  namespace: moodframe
+spec:
+  selector: { app: content-agent }
+  ports: [{ port: 80, targetPort: 5001 }]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-agent
+  namespace: moodframe
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: image-agent }
+  template:
+    metadata:
+      labels: { app: image-agent }
+    spec:
+      containers:
+        - name: image-agent
+          image: __LOGIN_SERVER__/moodframe-image:__AGENT_TAG__
+          ports: [{ containerPort: 5002 }]
+          env:
+            - { name: GITHUB_COPILOT_MODEL, value: gpt-5.6-sol }
+            - { name: AGENT_PUBLIC_URL, value: "http://image-agent/" }
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef: { name: copilot-auth, key: github-token }
+          readinessProbe:
+            httpGet: { path: /health, port: 5002 }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 500m, memory: 1Gi }
+            limits: { cpu: "2", memory: 3Gi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: image-agent
+  namespace: moodframe
+spec:
+  selector: { app: image-agent }
+  ports: [{ port: 80, targetPort: 5002 }]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: moodframe
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: backend }
+  template:
+    metadata:
+      labels: { app: backend }
+    spec:
+      containers:
+        - name: backend
+          image: __LOGIN_SERVER__/moodframe-api:__API_TAG__
+          ports: [{ containerPort: 8000 }]
+          env:
+            - { name: CONTENT_AGENT_URL, value: "http://content-agent" }
+            - { name: IMAGE_AGENT_URL, value: "http://image-agent" }
+          readinessProbe:
+            httpGet: { path: /health, port: 8000 }
+            initialDelaySeconds: 3
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: moodframe
+spec:
+  selector: { app: backend }
+  ports: [{ port: 8000, targetPort: 8000 }]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: moodframe
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: frontend }
+  template:
+    metadata:
+      labels: { app: frontend }
+    spec:
+      containers:
+        - name: frontend
+          image: __LOGIN_SERVER__/moodframe-web:__WEB_TAG__
+          ports: [{ containerPort: 80 }]
+          env:
+            - { name: BACKEND_HOST, value: backend }
+            - { name: BACKEND_SCHEME, value: http }
+            - { name: BACKEND_PORT, value: ":8000" }
+          readinessProbe:
+            httpGet: { path: /, port: 80 }
+            initialDelaySeconds: 3
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: moodframe
+spec:
+  type: LoadBalancer
+  selector: { app: frontend }
+  ports: [{ port: 80, targetPort: 80 }]
