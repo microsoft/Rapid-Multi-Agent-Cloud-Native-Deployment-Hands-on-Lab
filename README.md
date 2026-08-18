@@ -1,5 +1,9 @@
 # Rapid Multi-Agent Cloud-Native Deployment Hands-on Lab
 
+
+
+[![Watch the Rapid Multi-Agent Cloud-Native Deployment Hands-on Lab video](https://img.youtube.com/vi/-soMBeF27cc/hqdefault.jpg)](https://youtu.be/-soMBeF27cc)
+
 This repository is a story-driven, one-hour workshop about taking a small social mood-sharing agent application from a developer laptop to Azure.
 
 ![arch](./imgs/designer.png)
